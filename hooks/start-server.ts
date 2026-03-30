@@ -36,6 +36,9 @@ const server = spawn({
 });
 server.unref();
 
+// Save PID so Stop hook can clean up
+await Bun.write(resolve(ocDir, ".server.pid"), String(server.pid));
+
 // Wait for server to be ready
 for (let i = 0; i < 30; i++) {
   try {

@@ -6,8 +6,20 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/start-server.ts\"",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/stop-server.ts\" 2>/dev/null; bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/start-server.ts\"",
             "timeout": 20000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/stop-server.ts\"",
+            "timeout": 5000
           }
         ]
       }
