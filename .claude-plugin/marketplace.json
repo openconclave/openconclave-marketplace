@@ -9,11 +9,12 @@
   "plugins": [
     {
       "name": "openconclave",
-      "description": "AI agent orchestration with visual workflows. Claude Code + Ollama engines, channel-in-the-loop, workflows-as-MCP-tools, cron scheduling, Telegram integration.",
+      "description": "AI agent orchestration with visual workflows. Claude Code + Ollama engines, channel-in-the-loop, workflows-as-MCP-tools.",
       "category": "development",
       "source": {
         "source": "url",
-        "url": "https://github.com/openconclave/openconclave-plugin.git"
+        "url": "https://github.com/openconclave/openconclave-plugin.git",
+        "sha": "1d888f40475febe74cace71575cc2d0d8c83939f"
       },
       "homepage": "https://openconclave.com"
     }
