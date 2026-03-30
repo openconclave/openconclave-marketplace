@@ -1,5 +1,7 @@
 /**
- * Thin MCP proxy — finds the OpenConclave installation and loads its MCP server.
+ * Thin MCP proxy — finds the OpenConclave server code and runs it.
+ * CWD is NOT changed — .openconclave/ data dir is created in the project folder.
+ * Server code lives at ~/.openconclave-app/, data lives where Claude Code runs.
  */
 import { resolve } from "path";
 import { existsSync } from "fs";
@@ -15,7 +17,6 @@ for (const dir of candidates) {
   const p = resolve(dir, "packages/server/src/mcp/server.ts");
   if (existsSync(p)) {
     mcpPath = p;
-    process.chdir(dir);
     break;
   }
 }
@@ -25,5 +26,5 @@ if (!mcpPath) {
   process.exit(1);
 }
 
-// Import and run the actual MCP server directly (same process, shared stdio)
+// Import the MCP server — CWD stays at the project folder
 await import(mcpPath);
