@@ -1,10 +1,11 @@
 /**
  * Thin MCP proxy — finds the OpenConclave server code and runs it.
- * CWD is NOT changed — .openconclave/ data dir is created in the project folder.
- * Server code lives at ~/.openconclave-app/, data lives where Claude Code runs.
+ * Spawns the real MCP server as a child with inherited stdio so
+ * import.meta.main is true and node_modules resolve from the app dir.
  */
 import { resolve } from "path";
 import { existsSync } from "fs";
+import { spawn } from "bun";
 
 const home = process.env.HOME ?? process.env.USERPROFILE ?? "";
 const candidates = [
@@ -12,19 +13,30 @@ const candidates = [
   resolve(home, ".openconclave-app"),
 ].filter(Boolean) as string[];
 
-let mcpPath: string | null = null;
+let ocDir: string | null = null;
 for (const dir of candidates) {
   const p = resolve(dir, "packages/server/src/mcp/server.ts");
   if (existsSync(p)) {
-    mcpPath = p;
+    ocDir = dir;
     break;
   }
 }
 
-if (!mcpPath) {
+if (!ocDir) {
   console.error("OpenConclave not found. Install: curl -fsSL https://openconclave.com/install.sh | bash");
   process.exit(1);
 }
 
-// Import the MCP server — CWD stays at the project folder
-await import(mcpPath);
+// Spawn bun with the MCP server — inherits stdio for JSON-RPC transport
+const mcpScript = resolve(ocDir, "packages/server/src/mcp/server.ts");
+const proc = spawn({
+  cmd: ["bun", "run", mcpScript],
+  cwd: ocDir,
+  stdin: "inherit",
+  stdout: "inherit",
+  stderr: "inherit",
+});
+
+// Exit when child exits
+const code = await proc.exited;
+process.exit(code);
