@@ -26,6 +26,8 @@ if (!existsSync(resolve(ocDir, "packages/server/src/index.ts"))) {
 }
 
 // Start server in background (detached so it survives hook exit)
+// Pass Claude Code's PID so the server can self-terminate when it exits
+const claudePid = process.ppid ?? process.env.PPID;
 const server = spawn({
   cmd: ["bun", "start"],
   cwd: ocDir,
@@ -33,6 +35,10 @@ const server = spawn({
   stderr: "ignore",
   stdin: "ignore",
   detached: true,
+  env: {
+    ...process.env,
+    ...(claudePid ? { OPENCONCLAVE_PARENT_PID: String(claudePid) } : {}),
+  },
 });
 server.unref();
 
