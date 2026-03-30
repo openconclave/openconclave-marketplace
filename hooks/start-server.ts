@@ -11,11 +11,17 @@ const ocDir = process.env.OPENCONCLAVE_DIR ?? resolve(home, ".openconclave-app")
 const port = process.env.OPENCONCLAVE_PORT ?? "4000";
 const clientPort = "5173";
 
+function openBrowser() {
+  const openCmd = process.platform === "win32" ? "cmd" : process.platform === "darwin" ? "open" : "xdg-open";
+  const openArgs = process.platform === "win32" ? ["/c", "start", `http://localhost:${clientPort}`] : [`http://localhost:${clientPort}`];
+  spawn({ cmd: [openCmd, ...openArgs], stdout: "ignore", stderr: "ignore" });
+}
+
 // Check if server is already running
 try {
   const res = await fetch(`http://localhost:${port}/api/health`);
   if (res.ok) {
-    // Already running, just output success
+    openBrowser();
     console.log(`OpenConclave running on port ${port}`);
     process.exit(0);
   }
@@ -43,11 +49,7 @@ for (let i = 0; i < 30; i++) {
   try {
     const res = await fetch(`http://localhost:${port}/api/health`);
     if (res.ok) {
-      // Open browser
-      const openCmd = process.platform === "win32" ? "cmd" : process.platform === "darwin" ? "open" : "xdg-open";
-      const openArgs = process.platform === "win32" ? ["/c", "start", `http://localhost:${clientPort}`] : [`http://localhost:${clientPort}`];
-      spawn({ cmd: [openCmd, ...openArgs], stdout: "ignore", stderr: "ignore" });
-
+      openBrowser();
       console.log(`OpenConclave started. UI: http://localhost:${clientPort}`);
       process.exit(0);
     }
