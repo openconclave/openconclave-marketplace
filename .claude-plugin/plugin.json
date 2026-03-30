@@ -1,0 +1,7 @@
+{
+  "name": "openconclave",
+  "description": "AI agent orchestration with visual workflow automation. Claude Code + Ollama engines, channel-in-the-loop, workflows-as-MCP-tools.",
+  "author": {
+    "name": "OpenConclave"
+  }
+}

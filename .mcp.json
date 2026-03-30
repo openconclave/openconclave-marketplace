@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "openconclave": {
+      "command": "bun",
+      "args": ["run", "${HOME}/.openconclave-app/packages/server/src/mcp/server.ts"],
+      "cwd": "${HOME}/.openconclave-app"
+    }
+  }
+}
