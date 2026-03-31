@@ -1,16 +1,3 @@
 {
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/start-server.ts\"",
-            "timeout": 20000
-          }
-        ]
-      }
-    ]
-  }
+  "hooks": {}
 }
