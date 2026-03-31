@@ -66,6 +66,14 @@ Combines parallel outputs. No config needed.
 - Output: `{"Node Label 1": output1, "Node Label 2": output2, ...}`
 - Keys are source node labels — make sure they're unique
 
+### Prompt (Channel Loop)
+Lets an agent ask the user a question and wait for a response. The workflow pauses until the user replies.
+- `description`: what kind of questions the agent might ask
+- Connect: Agent → (right handle) → Prompt → Agent (back)
+- The agent's system prompt should say "ask the user via the channel loop" — never mention "Claude Code"
+- Label all prompt nodes **"Ask User"** — agents think they're talking to a human
+- Every agent that might need clarification should have a prompt loop
+
 ### Output
 Delivers results. Config:
 - `type`: "claude-code" (channel to Claude Code session) | "telegram" (send to chat) | "log" (server console)
@@ -84,6 +92,12 @@ Use when the next step depends on a result.
 
 **Loop**: Trigger → Agent → Checker → Condition → (false) back to Agent / (true) Output
 Use for iterative refinement. The checker must pass data back for the next iteration.
+
+**Channel Loop (Human-in-the-loop)**: Agent ↔ Prompt (Ask User)
+Use when an agent might need user input, clarification, or approval. The agent sends a question via its right handle to a Prompt node, which forwards it to the user. The user's response flows back to the agent. Every agent in a dev pipeline should have one.
+
+**Feedback Loop**: Reviewer → (left handle) → Developer
+Use when a downstream agent can reject and send work back. The Reviewer outputs APPROVED or CHANGES_NEEDED; the engine routes CHANGES_NEEDED back to the Developer.
 
 **Tap**: Agent → Output (main chain) + Agent → Logger (side effect)
 Use for logging, notifications, or side effects without blocking the main flow.
