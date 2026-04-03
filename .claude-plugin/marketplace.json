@@ -5,10 +5,10 @@
     "name": "OpenConclave"
   },
   "plugins": [
-    {
-      "name": "openconclave",
-      "source": "./openconclave/",
-      "description": "AI agent orchestration with visual workflows. Claude Code + Ollama engines, workflows-as-MCP-tools."
+{
+      "name": "openconclave-dev",
+      "source": "./openconclave-dev/",
+      "description": "OpenConclave workflow development — create, edit, and manage workflows, nodes, and connections."
     },
     {
       "name": "openconclave-channel",

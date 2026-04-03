@@ -2,9 +2,12 @@
 description: "Create an OpenConclave workflow from a natural language description. Use when the user wants to build a workflow, automate a task, orchestrate agents, set up a pipeline, or connect multiple AI steps together. Triggers on: 'create a workflow', 'build a workflow', 'automate', 'set up a pipeline', 'I want to orchestrate'."
 argument-hint: "Describe what the workflow should do"
 allowed-tools:
-  - mcp__openconclave__create_workflow
-  - mcp__openconclave__list_workflows
-  - mcp__openconclave__get_workflow
+  - mcp__plugin_openconclave-dev_openconclave-dev__create_workflow
+  - mcp__plugin_openconclave-dev_openconclave-dev__list_workflows
+  - mcp__plugin_openconclave-dev_openconclave-dev__get_workflow
+  - mcp__plugin_openconclave-dev_openconclave-dev__add_node
+  - mcp__plugin_openconclave-dev_openconclave-dev__update_node
+  - mcp__plugin_openconclave-dev_openconclave-dev__get_node
 ---
 
 # Create OpenConclave Workflow
@@ -127,10 +130,13 @@ Bad agent prompts:
 After designing the workflow:
 
 1. Assign unique labels to every node (Agent A, Agent B, not Agent, Agent)
-2. Use `create_workflow` MCP tool with all nodes and edges
-3. Node positions: start trigger at {x: 0, y: 0}, space nodes 160px vertically, parallel nodes 240px horizontally
-4. Edge IDs: use format "e1", "e2", etc.
-5. After creation, give the user the URL: `http://localhost:5173/workflows/{id}`
+2. Use `create_workflow` to create the workflow with all nodes and edges
+3. Or build incrementally: `create_workflow` with trigger, then `add_node` with `connectFrom`/`connectTo` for each node
+4. Use `update_node` to adjust config or rewire edges after creation
+5. Use `get_node` to inspect full node details (config, code)
+6. Node positions: start trigger at {x: 0, y: 0}, space nodes 160px vertically, parallel nodes 240px horizontally
+7. Edge IDs: use format "e1", "e2", etc.
+8. After creation, give the user the URL: `http://localhost:5173/workflows/{id}`
 
 ## Process
 

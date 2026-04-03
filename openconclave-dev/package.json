@@ -1,0 +1,8 @@
+{
+  "name": "openconclave-dev-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start:mcp": "bun run mcp-proxy.ts"
+  }
+}

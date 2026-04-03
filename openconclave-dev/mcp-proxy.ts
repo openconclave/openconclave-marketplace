@@ -1,8 +1,3 @@
-/**
- * Thin MCP proxy — finds the OpenConclave server code and runs it.
- * Spawns the real MCP server as a child with inherited stdio so
- * import.meta.main is true and node_modules resolve from the app dir.
- */
 import { resolve } from "path";
 import { existsSync } from "fs";
 import { spawn } from "bun";
@@ -15,7 +10,7 @@ const candidates = [
 
 let ocDir: string | null = null;
 for (const dir of candidates) {
-  const p = resolve(dir, "packages/server/src/mcp/server.ts");
+  const p = resolve(dir, "packages/server/src/mcp/dev-server.ts");
   if (existsSync(p)) {
     ocDir = dir;
     break;
@@ -27,8 +22,7 @@ if (!ocDir) {
   process.exit(1);
 }
 
-// Spawn bun with the MCP server — inherits stdio for JSON-RPC transport
-const mcpScript = resolve(ocDir, "packages/server/src/mcp/server.ts");
+const mcpScript = resolve(ocDir, "packages/server/src/mcp/dev-server.ts");
 const proc = spawn({
   cmd: ["bun", "run", mcpScript],
   cwd: ocDir,
@@ -37,6 +31,5 @@ const proc = spawn({
   stderr: "inherit",
 });
 
-// Exit when child exits
 const code = await proc.exited;
 process.exit(code);
