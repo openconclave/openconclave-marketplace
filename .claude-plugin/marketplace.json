@@ -7,12 +7,12 @@
   "plugins": [
     {
       "name": "openconclave-channel",
-      "source": "./openconclave-channel/",
+      "source": "./plugins/openconclave-channel",
       "description": "OpenConclave channel — delivers workflow events and prompt questions to Claude Code sessions."
     },
     {
       "name": "openconclave-dev",
-      "source": "./openconclave-dev/",
+      "source": "./plugins/openconclave-dev",
       "description": "OpenConclave workflow development — create, edit, and manage workflows, nodes, and connections."
     }
   ]
