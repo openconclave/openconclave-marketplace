@@ -262,104 +262,13 @@ function connectWS() {
           });
         }
 
-        if (eventType === "channel:improve-prompt") {
-          const d = data.data ?? {};
-          const content = [
-            "A user wants you to improve an agent's system prompt in OpenConclave.",
-            "",
-            `Workflow ID: ${d.workflowId}`,
-            `Node ID: ${d.nodeId}`,
-            `Node Label: ${d.nodeLabel}`,
-            "",
-            "Current prompt:",
-            d.currentPrompt || "(empty)",
-            "",
-            "Please write an improved version of this system prompt — make it clearer, more effective, and well-structured.",
-            "Then call `update_node` to save it:",
-            `  update_node(workflowId: "${d.workflowId}", nodeId: "${d.nodeId}", config: { systemPrompt: "your improved prompt" })`,
-          ].join("\n");
-
-          await server.notification({
-            method: "notifications/claude/channel",
-            params: {
-              content,
-              meta: {
-                event_type: "channel:improve-prompt",
-                workflow_id: String(d.workflowId),
-                node_id: String(d.nodeId),
-                node_label: String(d.nodeLabel),
-              },
-            },
-          });
-        }
-
-        if (eventType === "channel:improve-description") {
-          const d = data.data ?? {};
-          const content = [
-            "A user wants you to improve the workflow-level Instructions for Claude in OpenConclave.",
-            "",
-            `Workflow ID: ${d.workflowId}`,
-            "",
-            "Current instructions:",
-            d.currentDescription || "(empty)",
-            "",
-            "Please write an improved version — make it clearer, more effective, and well-structured.",
-            "Then call `update_workflow` to save it:",
-            `  update_workflow(workflowId: "${d.workflowId}", description: "your improved instructions")`,
-          ].join("\n");
-
-          await server.notification({
-            method: "notifications/claude/channel",
-            params: {
-              content,
-              meta: {
-                event_type: "channel:improve-description",
-                workflow_id: String(d.workflowId),
-              },
-            },
-          });
-        }
-
-        if (eventType === "channel:improve-code") {
-          const d = data.data ?? {};
-          const content = [
-            "A user wants you to write or improve code for a Code node in OpenConclave.",
-            "",
-            `Workflow ID: ${d.workflowId}`,
-            `Node ID: ${d.nodeId}`,
-            `Node Label: ${d.nodeLabel}`,
-            `Runtime: ${d.runtime}`,
-            "",
-            "Current code:",
-            d.currentCode || "(empty — user may have typed a description of what they want)",
-            "",
-            "If the current code looks like a natural-language description, write the code from scratch.",
-            "If it's already code, improve it — make it more robust, fix bugs, and clean it up.",
-            `The runtime is ${d.runtime}. Input from the previous node is passed via stdin and $INPUT env var. Output must go to stdout as JSON.`,
-            "",
-            "Then call `update_node` to save it:",
-            `  update_node(workflowId: "${d.workflowId}", nodeId: "${d.nodeId}", config: { code: "your code here" })`,
-          ].join("\n");
-
-          await server.notification({
-            method: "notifications/claude/channel",
-            params: {
-              content,
-              meta: {
-                event_type: "channel:improve-code",
-                workflow_id: String(d.workflowId),
-                node_id: String(d.nodeId),
-                node_label: String(d.nodeLabel),
-              },
-            },
-          });
-        }
-
         // Resync tools when workflows change
         if (eventType === "workflow:updated" || eventType === "workflow:created" || eventType === "workflow:deleted") {
           await syncWorkflowTools();
         }
-      } catch {}
+      } catch (err) {
+        console.error("[channel] WS message handler error:", err);
+      }
     };
 
     ws.onclose = () => {
